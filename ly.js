@@ -226,6 +226,10 @@ const 共樣式 = {
 	}
 };
 const 諸層 = [{
+	"id": "陸",
+	"type": "background",
+	"paint": {"background-color": "#F8F4F0"}
+},{
 	id: "底圖", type: "raster", source: "蹤迹"
 },{
 	"id": "水",
@@ -278,6 +282,16 @@ const 諸層 = [{
 			// 3317.65-3500, 'hsl(6, 91%, 50%)',
 			// 3500-3500, 'hsl(358, 96%, 43%)'
 		]
+	}
+},{
+	"id": "冰",
+	"type": "fill",
+	"source": "開放免費地圖",
+	"source-layer": "landcover",
+	"filter": ["==",["get", "class"], "ice"],
+	"paint": {
+		"fill-color": "#fff",
+		"fill-opacity": 0.8
 	}
 },{
 	"id": "陸國界无爭議者粗綫",
