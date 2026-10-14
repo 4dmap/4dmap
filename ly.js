@@ -249,6 +249,16 @@ const 諸層 = [{
 	layout: {visibility: "visible"},
 	paint: {"hillshade-shadow-color": "#473B2422"}
 },{
+	"id": "沙",
+	"type": "fill",
+	"source": "開放免費地圖",
+	"source-layer": "landcover",
+	"filter": ["==",["get", "class"],"sand"],
+	"paint": {
+		"fill-color": "rgb(245, 238, 188)",
+		"fill-opacity": 0.9
+	}
+},{
 	"id": "海底地形", "type": "color-relief", "source": "海底高程", "maxzoom": 9,
 	"paint": {'color-relief-color': [
 			'interpolate',
@@ -290,8 +300,70 @@ const 諸層 = [{
 	"source-layer": "landcover",
 	"filter": ["==",["get", "class"], "ice"],
 	"paint": {
-		"fill-color": "#fff",
-		"fill-opacity": 0.8
+		"fill-color": "rgb(245, 250, 255)",
+		"fill-opacity": 0.6
+	}
+},{
+	"id": "路-一級",
+	"type": "line",
+	"source": "開放免費地圖",
+	"source-layer": "transportation",
+	"filter": [
+		"all",
+		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
+		["match",["get", "class"],["primary", "trunk"], true, false]//["!=", ["get", "ramp"], 1]
+	],
+	"layout": {"line-cap": "butt", "line-join": "round"},
+	"paint": {
+		"line-color": "hsl(208, 24%, 70%)",
+		"line-width": ["interpolate",["exponential", 1.2],["zoom"],
+			5,0.4, 6,0.7, 7,1.75, 20,20
+		],
+		"line-opacity": ["interpolate", ["linear"], ["zoom"], 5,0, 6,1]
+	}
+},{
+	"id": "路-馳道緣",
+	"type": "line",
+	"source": "開放免費地圖",
+	"source-layer": "transportation",
+	"minzoom": 4,
+	"filter": [
+		"all",
+		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
+		["==",["get", "class"], "motorway"]//["!=", ["get", "ramp"], 1]
+	],
+	"layout": {
+		"line-cap": "round",
+		"line-join": "round"
+	},
+	"paint": {
+		"line-color": "#e9ac77",
+		"line-width": ["interpolate",["exponential", 1.2],["zoom"],
+			4,0, 6,1.2, 20,24
+		],
+		"line-opacity": ["interpolate", ["linear"], ["zoom"], 3,0, 5,1]
+	}
+},{
+	"id": "路-馳道",
+	"type": "line",
+	"source": "開放免費地圖",
+	"source-layer": "transportation",
+	"minzoom": 4,
+	"filter": [
+		"all",
+		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
+		["==",["get", "class"], "motorway"]//["!=", ["get", "ramp"], 1]
+	],
+	"layout": {
+		"line-cap": "round",
+		"line-join": "round"
+	},
+	"paint": {
+		"line-color": "hsl(211, 30%, 65%)",
+		"line-width": ["interpolate",["exponential", 1.2],["zoom"],
+			4,0, 6,0.8, 20,20
+		],
+		"line-opacity": ["interpolate", ["linear"], ["zoom"], 3,0, 5,1]
 	}
 },{
 	"id": "陸國界无爭議者粗綫",
