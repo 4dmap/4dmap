@@ -226,18 +226,13 @@ const 共樣式 = {
 	}
 };
 const 諸層 = [{
-	"id": "陸",
-	"type": "background",
-	"paint": {"background-color": "#F8F4F0"}
+	"id": "陸", "type": "background", "paint": {"background-color": "#F8F4F0"}
 },{
 	id: "底圖", type: "raster", source: "蹤迹"
 },{
-	"id": "水",
-	"type": "fill",
-	"source": "開放免費地圖",
-	"source-layer": "water",
-	"filter": [
-		"all",
+	"id": "水", "type": "fill",
+	"source": "開放免費地圖", "source-layer": "water",
+	"filter": ["all",
 		["!=", ["get", "intermittent"], 1],
 		["!=", ["get", "brunnel"], "tunnel"]
 	],
@@ -249,14 +244,29 @@ const 諸層 = [{
 	layout: {visibility: "visible"},
 	paint: {"hillshade-shadow-color": "#473B2422"}
 },{
-	"id": "沙",
-	"type": "fill",
-	"source": "開放免費地圖",
-	"source-layer": "landcover",
+	"id": "沙", "type": "fill",
+	"source": "開放免費地圖", "source-layer": "landcover",
 	"filter": ["==",["get", "class"],"sand"],
 	"paint": {
 		"fill-color": "rgb(245, 238, 188)",
 		"fill-opacity": 0.9
+	}
+},{
+	"id": "草", "type": "fill",
+	"source": "開放免費地圖", "source-layer": "landcover",
+	"filter": ["==",["get", "class"],"grass"],
+	"paint": {
+		"fill-color": "hsl(90, 41%, 80%)",
+		"fill-opacity": 0.9
+	}
+},{
+	"id": "林", "type": "fill",
+	"source": "開放免費地圖", "source-layer": "landcover",
+	"filter": ["==",["get", "class"],"wood"],
+	"paint": {
+		"fill-color": "#21A675",
+		"fill-opacity": 0.2,
+		"fill-outline-color": "hsla(0,0%,0%,0.03)"
 	}
 },{
 	"id": "海底地形", "type": "color-relief", "source": "海底高程", "maxzoom": 9,
@@ -302,6 +312,40 @@ const 諸層 = [{
 	"paint": {
 		"fill-color": "rgb(245, 250, 255)",
 		"fill-opacity": 0.6
+	}
+},{
+	"id": "路-三級",
+	"type": "line",
+	"source": "開放免費地圖",
+	"source-layer": "transportation",
+	"filter": [
+		"all",
+		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
+		["match",["get", "class"], "tertiary", true, false]
+	],
+	"layout": {"line-cap": "butt", "line-join": "round"},
+	"paint": {
+		"line-color": "hsl(208, 15%, 70%)",
+		"line-width": ["interpolate",["exponential", 1.2],["zoom"],
+			9,1.5, 20,15
+		]
+	}
+},{
+	"id": "路-二級",
+	"type": "line",
+	"source": "開放免費地圖",
+	"source-layer": "transportation",
+	"filter": [
+		"all",
+		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
+		["match",["get", "class"], "secondary", true, false]
+	],
+	"layout": {"line-cap": "butt", "line-join": "round"},
+	"paint": {
+		"line-color": "hsl(208, 15%, 70%)",
+		"line-width": ["interpolate",["exponential", 1.2],["zoom"],
+			8,1.5, 20,17
+		]
 	}
 },{
 	"id": "路-一級",
