@@ -228,6 +228,17 @@ const 共樣式 = {
 const 諸層 = [{
 	id: "底圖", type: "raster", source: "蹤迹"
 },{
+	"id": "水",
+	"type": "fill",
+	"source": "開放免費地圖",
+	"source-layer": "water",
+	"filter": [
+		"all",
+		["!=", ["get", "intermittent"], 1],
+		["!=", ["get", "brunnel"], "tunnel"]
+	],
+	"paint": {"fill-color": "#AECFE2"}
+},{
 	id: "hills",
 	type: "hillshade",
 	source: "hillshadeSource",
