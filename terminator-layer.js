@@ -13,8 +13,8 @@ export class TerminatorLayer {
 		updateInterval = 60000,
 		nightOpacity = 0.50,
 		astronomicalOpacity = 0.50,
-		nauticalOpacity = 0.35,
-		civilOpacity = 0.18,
+		nauticalOpacity = 0.45,
+		civilOpacity = 0.35,
 		columns = 256, rows = 128
 	} = {}) {
 		this.id = id;
@@ -115,6 +115,46 @@ float degToRad(float d) {
 float radToDeg(float r) {
 	return r * 180.0 / PI;
 }
+float harmonicSlope(float a, float b) {
+	if (a <= 0.0 || b <= 0.0) { return 0.0;}
+	return 2.0 * a * b / (a + b);
+}
+float hermite(float y0, float y1, float m0, float m1, float t) {
+	float t2 = t * t;
+	float t3 = t2 * t;
+	return (2.0 * t3 - 3.0 * t2 + 1.0) * y0
+		+ (t3 - 2.0 * t2 + t) * 6.0 * m0
+		+ (-2.0 * t3 + 3.0 * t2) * y1
+		+ (t3 - t2) * 6.0 * m1;
+}
+float twilightAlpha(float altitude) {
+	float x = clamp(-altitude, 0.0, 18.0);
+	float y0 = 0.0;
+	float y1 = u_opacities.w; // Civil twilight:  -6°
+	float y2 = u_opacities.z; // Nautical twilight: -12°
+	float y3 = u_opacities.y; // Astronomical twilight: -18°
+	// float y4 = u_opacities.x; // Night: -24°
+	float d0 = (y1 - y0) / 6.0;
+	float d1 = (y2 - y1) / 6.0;
+	float d2 = (y3 - y2) / 6.0;
+	// float d3 = (y4 - y3) / 6.0;
+	float m0 = d0;
+	float m1 = harmonicSlope(d0, d1);
+	float m2 = harmonicSlope(d1, d2);
+	float m3 = d2;
+	// float m4 = d3;
+	if (altitude >= 0.0) return 0.0;
+	if (x >= 18.0) return y3;
+	float segment = floor(x / 6.0);
+	float t = (x - segment * 6.0) / 6.0;
+	if (segment < 1.0)
+		return hermite(y0, y1, m0, m1, t);
+	if (segment < 2.0)
+		return hermite(y1, y2, m1, m2, t);
+	// if (segment < 3.0)
+	return hermite(y2, y3, m2, m3, t);
+	// return hermite(y3, y4, m3, m4, t);
+}
 
 void main() {
 	// Recover longitude and latitude from normalized Mercator coordinates.
@@ -136,13 +176,11 @@ void main() {
 		cos(latitude) * sin(longitude),
 		sin(latitude)
 	);
-
 	vec3 sunDirection = vec3(
 		cos(sunLat) * cos(sunLon),
 		cos(sunLat) * sin(sunLon),
 		sin(sunLat)
 	);
-
 	// Dot product = sin(solar altitude).
 	float sinAltitude = clamp(
 		dot(surface, sunDirection),
@@ -151,31 +189,7 @@ void main() {
 	);
 
 	float altitude = radToDeg(asin(sinAltitude));
-	// Opacity order:
-	// x = full night
-	// y = astronomical twilight (-18°)
-	// z = nautical twilight (-12°)
-	// w = civil twilight (-6°)
-	float alpha;
-	if (altitude >= 0.0) {
-		alpha = 0.0;
-	// } else if (altitude >= -6.0) {
-	//     float t = smoothstep(-6.0, 0.0, altitude);
-	//     alpha = mix(u_opacities.w, 0.0, t);
-	// } else if (altitude >= -12.0) {
-	//     float t = smoothstep(-12.0, -6.0, altitude);
-	//     alpha = mix(u_opacities.z, u_opacities.w, t);
-	// } else if (altitude >= -18.0) {
-	//     float t = smoothstep(-18.0, -12.0, altitude);
-	//     alpha = mix(u_opacities.y, u_opacities.z, t);
-	// } else {
-	//     float t = smoothstep(-24.0, -18.0, altitude);
-	//     alpha = mix(u_opacities.x, u_opacities.y, t);
-	// }
-	} else {
-		float t = smoothstep(-18.0, 0.0, altitude);
-		alpha = mix(u_opacities.y, 0.0, t);
-	}
+	float alpha = twilightAlpha(altitude);
 	// Discard completely transparent fragments.
 	if (alpha <= 0.001) {
 		discard;

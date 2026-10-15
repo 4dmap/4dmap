@@ -304,22 +304,62 @@ const 諸層 = [{
 		]
 	}
 },{
-	"id": "冰",
-	"type": "fill",
-	"source": "開放免費地圖",
-	"source-layer": "landcover",
+	"id": "冰", "type": "fill",
+	"source": "開放免費地圖", "source-layer": "landcover",
 	"filter": ["==",["get", "class"], "ice"],
 	"paint": {
 		"fill-color": "rgb(245, 250, 255)",
 		"fill-opacity": 0.6
 	}
 },{
+	"id": "人行區", "type": "fill",
+	"source": "開放免費地圖", "source-layer": "transportation",
+	"minzoom": 15,
+	"filter": ["all",
+		["match",["geometry-type"],["LineString", "MultiLineString"], false, true],
+		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
+		["==", ["get", "class"], "path"]
+	],
+	"paint": {
+		"fill-color": "hsl(30, 25%, 73%)",
+		"fill-opacity": 0.3
+	}
+},{
+	"id": "人行道", "type": "line",
+	"source": "開放免費地圖", "source-layer": "transportation",
+	"minzoom": 15,
+	"filter": ["all",
+		["match",["geometry-type"],["LineString", "MultiLineString"], true, false],
+		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
+		["==", ["get", "class"], "path"]
+	],
+	"paint": {
+		"line-color": "hsl(30, 35%, 73%)",
+		"line-dasharray": [1.5, 0.75],
+		"line-width": ["interpolate",["exponential", 1.2],["zoom"],
+		15,1, 20,4
+		]
+	}
+},{
+	"id": "路-局域", "type": "line",
+	"source": "開放免費地圖", "source-layer": "transportation",
+	"filter": ["all",
+		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
+		["match",["get", "class"],["minor", "service", "track"], true, false]
+	],
+	"layout": {"line-cap": "round", "line-join": "round"},
+	"paint": {
+		"line-color": "hsl(208, 5%, 70%)",
+		"line-width": ["interpolate",["exponential", 1.2],["zoom"],
+			13.5,0, 14,2.5, 20,11.5
+		]
+	}
+},{
 	"id": "路-三級",
 	"type": "line",
 	"source": "開放免費地圖",
 	"source-layer": "transportation",
-	"filter": [
-		"all",
+	"filter": ["all",
 		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
 		["match",["get", "class"], "tertiary", true, false]
 	],
@@ -335,8 +375,7 @@ const 諸層 = [{
 	"type": "line",
 	"source": "開放免費地圖",
 	"source-layer": "transportation",
-	"filter": [
-		"all",
+	"filter": ["all",
 		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
 		["match",["get", "class"], "secondary", true, false]
 	],
@@ -352,8 +391,7 @@ const 諸層 = [{
 	"type": "line",
 	"source": "開放免費地圖",
 	"source-layer": "transportation",
-	"filter": [
-		"all",
+	"filter": ["all",
 		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
 		["match",["get", "class"],["primary", "trunk"], true, false]//["!=", ["get", "ramp"], 1]
 	],
@@ -371,8 +409,7 @@ const 諸層 = [{
 	"source": "開放免費地圖",
 	"source-layer": "transportation",
 	"minzoom": 4,
-	"filter": [
-		"all",
+	"filter": ["all",
 		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
 		["==",["get", "class"], "motorway"]//["!=", ["get", "ramp"], 1]
 	],
@@ -393,8 +430,7 @@ const 諸層 = [{
 	"source": "開放免費地圖",
 	"source-layer": "transportation",
 	"minzoom": 4,
-	"filter": [
-		"all",
+	"filter": ["all",
 		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
 		["==",["get", "class"], "motorway"]//["!=", ["get", "ramp"], 1]
 	],
