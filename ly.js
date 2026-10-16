@@ -313,6 +313,18 @@ const 諸層 = [{
 		"fill-opacity": 0.6
 	}
 },{
+	"id": "舟航綫", "type": "line",
+	"source": "開放免費地圖", "source-layer": "transportation",
+	"filter": ["match",["get", "class"],["ferry"], true, false],
+	"layout": {"line-join": "round"},
+	"paint": {
+		"line-color": "rgba(108, 159, 182, 1)",
+		"line-dasharray": [2, 2],
+		"line-width": ["interpolate",["linear"],["zoom"],
+			4,0.5, 12,1
+		]
+	}
+},{
 	"id": "人行區", "type": "fill",
 	"source": "開放免費地圖", "source-layer": "transportation",
 	"minzoom": 15,
@@ -435,44 +447,6 @@ const 諸層 = [{
 			4,0, 6,0.8, 20,20
 		],
 		"line-opacity": ["interpolate", ["linear"], ["zoom"], 3,0, 5,1]
-	}
-},{
-	"id": "大路名", "type": "symbol",
-	"source": "開放免費地圖", "source-layer": "transportation_name",
-	"minzoom": 12.2,
-	"filter": ["match",["get", "class"],["primary","secondary","tertiary","trunk"], true, false],
-	"layout": {
-		"symbol-placement": "line",
-		"text-field": 語文候補列,
-		"text-font": 黑體,
-		"text-rotation-alignment": "map",
-		"text-size": ["interpolate",["linear"],["zoom"],
-			13,12, 17,16
-		]
-	},
-	"paint": {
-		"text-color": "#666", "text-halo-color": "#fff",
-		"text-halo-blur": 0.5,
-		"text-halo-width": 1
-	}
-},{
-	"id": "小路名", "type": "symbol",
-	"source": "開放免費地圖", "source-layer": "transportation_name",
-	"minzoom": 15,
-	"filter": ["match",["get", "class"],["minor", "service", "track"], true, false],
-	"layout": {
-		"symbol-placement": "line",
-		"text-field": 語文候補列,
-		"text-font": 黑體,
-		"text-rotation-alignment": "map",
-		"text-size": ["interpolate",["linear"],["zoom"],
-			15,13, 18,16
-		]
-	},
-	"paint": {
-		"text-color": "#666", "text-halo-color": "#fff",
-		"text-halo-blur": 0.4,
-		"text-halo-width": 1
 	}
 },{
 	"id": "陸國界无爭議者粗綫",
@@ -651,6 +625,103 @@ const 諸層 = [{
 			0
 		],
 		"fill-extrusion-opacity": 0.9
+	}
+},{
+	"id": "大路名", "type": "symbol",
+	"source": "開放免費地圖", "source-layer": "transportation_name",
+	"minzoom": 12.2,
+	"filter": ["match",["get", "class"],["primary","secondary","tertiary","trunk"], true, false],
+	"layout": {
+		"symbol-placement": "line",
+		"text-field": 語文候補列,
+		"text-font": 黑體,
+		"text-rotation-alignment": "map",
+		"text-size": ["interpolate",["linear"],["zoom"],
+			13,12, 17,16
+		]
+	},
+	"paint": {
+		"text-color": "#666", "text-halo-color": "#fff",
+		"text-halo-blur": 0.5,
+		"text-halo-width": 1
+	}
+},{
+	"id": "小路名", "type": "symbol",
+	"source": "開放免費地圖", "source-layer": "transportation_name",
+	"minzoom": 15,
+	"filter": ["match",["get", "class"],["minor", "service", "track"], true, false],
+	"layout": {
+		"symbol-placement": "line",
+		"text-field": 語文候補列,
+		"text-font": 黑體,
+		"text-rotation-alignment": "map",
+		"text-size": ["interpolate",["linear"],["zoom"],
+			15,13, 18,16
+		]
+	},
+	"paint": {
+		"text-color": "#666", "text-halo-color": "#fff",
+		"text-halo-blur": 0.4,
+		"text-halo-width": 1
+	}
+},{
+	"id": "川名", "type": "symbol",
+	"source": "開放免費地圖", "source-layer": "waterway",
+	"minzoom": 8,
+	"filter": ["match",["geometry-type"],["LineString", "MultiLineString"], true, false],
+	"layout": {
+		"symbol-placement": "line",
+		"symbol-spacing": 350,
+		"text-field": 語文候補列,
+		"text-font": ["literal", ["Times","行楷-简","AR KaiU30 MD","楷体","標楷體","南監體","統刊朙","Noto Serif CJK KR"]],
+		"text-letter-spacing": 0.2,
+		"text-max-width": 5,
+		"text-size": ["interpolate", ["linear"], ["zoom"], 8,12, 10,16]
+	},
+	"paint": {
+		"text-color": "#74aee9",
+		"text-halo-color": "rgba(255,255,255,0.7)",
+		"text-halo-width": 1.5
+	}
+},{
+	"id": "水名-點狀", "type": "symbol",
+	"source": "開放免費地圖", "source-layer": "water_name",
+	"filter": ["match",["geometry-type"],["MultiPoint", "Point"], true, false],
+	"layout": {
+		"text-field": 語文候補列,
+		"text-font": ["literal", ["Times","行楷-简","AR KaiU30 MD","楷体","標楷體","南監體","統刊朙","Noto Serif CJK KR"]],
+		"text-letter-spacing": 0.2,
+		"text-max-width": 9,
+		"text-size": ["interpolate",["linear"],["zoom"],
+			6,10, 8,14
+		],
+		"text-writing-mode": ["vertical"],
+		"text-rotation-alignment": "map",// 隨圖轉
+	},
+	"paint": {
+		"text-color": "#495e91",
+		"text-halo-color": "rgba(255,255,255,0.7)",
+		"text-halo-width": 1.5
+	}
+},{
+	"id": "水名-綫狀", "type": "symbol",
+	"source": "開放免費地圖", "source-layer": "water_name",
+	"filter": ["match",["geometry-type"],["LineString", "MultiLineString"], true, false],
+	"layout": {
+		"symbol-placement": "line",
+		"symbol-spacing": 350,
+		"text-field": 語文候補列,
+		"text-font": ["Times","行楷-简","AR KaiU30 MD","楷体","標楷體","南監體","統刊朙","Noto Serif CJK KR"],
+		"text-letter-spacing": 0.2,
+		"text-max-width": 9,
+		"text-size": ["interpolate",["linear"],["zoom"],
+			6,12, 9,16
+		]
+	},
+	"paint": {
+		"text-color": "#495e91",
+		"text-halo-color": "rgba(255,255,255,0.7)",
+		"text-halo-width": 1.5
 	}
 },{
 	id: "點-大陸鄉名",
