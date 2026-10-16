@@ -36,6 +36,7 @@ function 畫經綫(隔=15){
 const 臺灣外圍 = [[121,25.7],[118.8,23.6],[119.6,21.5],[121.7,21.5],[122.6,25],[121,25.7]];
 const 黑體 = ["Noto Sans CJK KR","等线","微軟正黑體","黑体"];
 const 膚廓體 = ["南監體","統刊朙","Noto Serif CJK KR","宋体"];
+const 語文候補列 = ["coalesce", ["get","name:zh-Hant"],["get","name:zh"],["get","name:ko-Hani"],["get","name"],["get","name:ja"]];
 const 共樣式 = {
 	鄉點:{
 		layout: {
@@ -355,10 +356,8 @@ const 諸層 = [{
 		]
 	}
 },{
-	"id": "路-三級",
-	"type": "line",
-	"source": "開放免費地圖",
-	"source-layer": "transportation",
+	"id": "路-三級", "type": "line",
+	"source": "開放免費地圖", "source-layer": "transportation",
 	"filter": ["all",
 		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
 		["match",["get", "class"], "tertiary", true, false]
@@ -371,10 +370,8 @@ const 諸層 = [{
 		]
 	}
 },{
-	"id": "路-二級",
-	"type": "line",
-	"source": "開放免費地圖",
-	"source-layer": "transportation",
+	"id": "路-二級", "type": "line",
+	"source": "開放免費地圖", "source-layer": "transportation",
 	"filter": ["all",
 		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
 		["match",["get", "class"], "secondary", true, false]
@@ -387,10 +384,8 @@ const 諸層 = [{
 		]
 	}
 },{
-	"id": "路-一級",
-	"type": "line",
-	"source": "開放免費地圖",
-	"source-layer": "transportation",
+	"id": "路-一級", "type": "line",
+	"source": "開放免費地圖", "source-layer": "transportation",
 	"filter": ["all",
 		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
 		["match",["get", "class"],["primary", "trunk"], true, false]//["!=", ["get", "ramp"], 1]
@@ -404,10 +399,8 @@ const 諸層 = [{
 		"line-opacity": ["interpolate", ["linear"], ["zoom"], 5,0, 6,1]
 	}
 },{
-	"id": "路-馳道緣",
-	"type": "line",
-	"source": "開放免費地圖",
-	"source-layer": "transportation",
+	"id": "路-馳道緣", "type": "line",
+	"source": "開放免費地圖", "source-layer": "transportation",
 	"minzoom": 4,
 	"filter": ["all",
 		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
@@ -420,15 +413,13 @@ const 諸層 = [{
 	"paint": {
 		"line-color": "#e9ac77",
 		"line-width": ["interpolate",["exponential", 1.2],["zoom"],
-			4,0, 6,1.2, 20,24
+			4,0, 6,1.2, 20,26
 		],
 		"line-opacity": ["interpolate", ["linear"], ["zoom"], 3,0, 5,1]
 	}
 },{
-	"id": "路-馳道",
-	"type": "line",
-	"source": "開放免費地圖",
-	"source-layer": "transportation",
+	"id": "路-馳道", "type": "line",
+	"source": "開放免費地圖", "source-layer": "transportation",
 	"minzoom": 4,
 	"filter": ["all",
 		["match",["get", "brunnel"],["bridge", "tunnel"], false, true],
@@ -444,6 +435,44 @@ const 諸層 = [{
 			4,0, 6,0.8, 20,20
 		],
 		"line-opacity": ["interpolate", ["linear"], ["zoom"], 3,0, 5,1]
+	}
+},{
+	"id": "大路名", "type": "symbol",
+	"source": "開放免費地圖", "source-layer": "transportation_name",
+	"minzoom": 12.2,
+	"filter": ["match",["get", "class"],["primary","secondary","tertiary","trunk"], true, false],
+	"layout": {
+		"symbol-placement": "line",
+		"text-field": 語文候補列,
+		"text-font": 黑體,
+		"text-rotation-alignment": "map",
+		"text-size": ["interpolate",["linear"],["zoom"],
+			13,12, 17,16
+		]
+	},
+	"paint": {
+		"text-color": "#666", "text-halo-color": "#fff",
+		"text-halo-blur": 0.5,
+		"text-halo-width": 1
+	}
+},{
+	"id": "小路名", "type": "symbol",
+	"source": "開放免費地圖", "source-layer": "transportation_name",
+	"minzoom": 15,
+	"filter": ["match",["get", "class"],["minor", "service", "track"], true, false],
+	"layout": {
+		"symbol-placement": "line",
+		"text-field": 語文候補列,
+		"text-font": 黑體,
+		"text-rotation-alignment": "map",
+		"text-size": ["interpolate",["linear"],["zoom"],
+			15,13, 18,16
+		]
+	},
+	"paint": {
+		"text-color": "#666", "text-halo-color": "#fff",
+		"text-halo-blur": 0.4,
+		"text-halo-width": 1
 	}
 },{
 	"id": "陸國界无爭議者粗綫",
@@ -762,7 +791,7 @@ const 諸層 = [{
 		["!", ["has", "building:part"]] 
 	],
 	layout:{
-		"text-field": ["coalesce", ["get","name:zh-Hant"],["get","name:zh"],["get","name:ko-Hani"],["get","name"],["get","name:ja"]],
+		"text-field": 語文候補列,
 		"text-font": 黑體,
 		"text-size": ["interpolate", ["linear"], ["zoom"], 15,10, 18,14],
 		"text-writing-mode": ["vertical"], "text-justify": "center",

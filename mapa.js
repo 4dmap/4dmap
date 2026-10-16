@@ -149,11 +149,18 @@ export const lmap = new maplibregl.Map({
 	minZoom: 1, maxZoom: 21, maxPitch: 85
 });
 let 昏旦;
-lmap.on('load', () => {
+lmap.on('style.load', () => {
 	昏旦 = new TerminatorLayer({updateInterval: 30000});
 	const layers = lmap.getStyle().layers;
 	const firstSymbol = layers.find(layer => layer.type === "symbol");
 	lmap.addLayer(昏旦, firstSymbol?.id);
+});
+lmap.on('zoom', () => {
+	const z = lmap.getZoom();
+	var 傾極 = (z-6)/7*85;
+	if (傾極 < 0){ 傾極 = 0;}
+	else if (傾極 > 85){ 傾極 = 85;}
+	lmap.setMaxPitch(傾極);
 });
 lmap.addControl(new maplibregl.FullscreenControl());
 lmap.addControl(
